@@ -21,8 +21,18 @@ jobs:
       - name: Run Scraping Code File #Job 2: run the code that scrapes the workplace exposure site
         run:
           Rscript -e "source('code/scrape_exposure_data.R')"
-      - name: Commit results #Job 3: committ the changes back to the repository
-        run: |
+      - name: install topojson
+	run:
+	  npm install topojson
+      - name: convert to TopoJSON
+	run:
+	  geo2topo mapinput.geojson > mapinput.topojson
+      - name: Run topojson to js code
+        run:
+          Rscript -e "source('code/topojson_to_js.R')"
+      - name: Commit results #Job 3: commit the changes back to the repository
+        run: 
+	  
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git commit -a -m 'Updated scraped data' || echo "Updated scraped data"
